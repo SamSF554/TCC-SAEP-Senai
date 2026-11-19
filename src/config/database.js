@@ -1,6 +1,7 @@
 const path = require('path');
 const { Sequelize } = require('sequelize');
 const pg = require('pg');
+const supabaseCa = require('./supabase-ca');
 
 let sequelize;
 
@@ -22,7 +23,7 @@ async function conectarBanco() {
       dialectModule: pg,
       logging: false,
       pool: { max: 1, min: 0, acquire: 20000, idle: 10000 },
-      dialectOptions: { ssl: { require: true, rejectUnauthorized: true } }
+      dialectOptions: { ssl: { require: true, rejectUnauthorized: true, ca: supabaseCa } }
     });
     try {
       await postgres.authenticate();
