@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanLink | Cadastro de Entregas</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+
+<body>
+
+  <header class="navbar">
+    <a href="index.html" class="logo-container">
+      <img src="img/LogoHorizontal.svg" alt="UrbanLink Logo" class="logo-img">
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Início</a>
+      <a href="simulacao.html">Simulação</a>
+
+      <!-- Link visível para qualquer usuário logado (Operador ou Admin) -->
+      <a href="entregas.html" class="nav-logado" style="display: none;">Entregas</a>
+
+      <!-- Links visíveis exclusivamente para Administradores -->
+      <a href="estoque.html" class="nav-admin" style="display: none;">Estoque</a>
+      <a href="veiculos.html" class="nav-admin" style="display: none;">Veículos</a>
+      <a href="admin.html" class="nav-admin" style="display: none;">Painel Admin</a>
+
+      <a href="login.html" id="nav-btn-login" class="btn-nav-login">Entrar</a>
+      <span id="nav-usuario-nome" style="font-weight: 700; color: var(--verde-escuro); display: none;"></span>
+      <button id="nav-btn-logout" class="btn-nav-logout" style="display: none;" onclick="fazerLogout()">Sair</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1 class="titulo-pagina">Cadastro e Envio de Entregas</h1>
+    <p class="subtitulo-pagina">Selecione os produtos do estoque e despache suas mercadorias!</p>
+
+    <form id="form-entrega" style="margin-bottom: 30px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+        <div class="input-pin-group">
+          <span class="icon-pin">📍</span>
+          <input type="text" id="e_codigo" placeholder="Código Rastreio (ex: TRK-998) *" required>
+        </div>
+
+        <div class="input-pin-group">
+          <span class="icon-pin">📍</span>
+          <input type="text" id="e_destino" placeholder="Endereço de Destino *" required>
+        </div>
+
+        <div class="input-pin-group">
+          <span class="icon-pin">📍</span>
+          <select id="e_produto" required>
+            <option value="">Selecione o produto do estoque...</option>
+          </select>
+        </div>
+
+        <div class="input-pin-group">
+          <span class="icon-pin">📍</span>
+          <input type="number" id="e_peso" placeholder="Quantidade / Peso (kg) *" required min="1" value="1">
+        </div>
+
+        <div class="input-pin-group">
+          <span class="icon-pin">📍</span>
+          <select id="e_veiculo">
+            <option value="">Selecione o veículo da frota...</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between;">
+        <button type="submit" class="btn-full" style="width: auto; padding: 12px 28px;">
+          + Cadastrar Entrega
+        </button>
+        <span id="mensagem-entrega" style="font-weight: 700;"></span>
+      </div>
+    </form>
+
+    <div class="tabela-card">
+      <h3 style="color: var(--verde-escuro); margin-bottom: 16px;">Suas Entregas Cadastradas</h3>
+      <table class="tabela-custom">
+        <thead>
+          <tr>
+            <th>Código Rastreio</th>
+            <th>Destino</th>
+            <th>Produto (Qtd)</th>
+            <th>Veículo Alocado</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-entregas-body">
+          <tr>
+            <td colspan="5" style="text-align: center;">Carregando entregas...</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- CONTROLES DE PAGINAÇÃO (v9.1) -->
+      <div id="paginacao-entregas"></div>
+    </div>
+  </main>
+
+  <script src="js/comum.js"></script>
+  <script src="js/entregas.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanLink | Conta Pessoal</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<header class="navbar">
+  <a href="index.html" class="logo-container">
+    <img src="img/LogoHorizontal.svg" alt="UrbanLink Logo" class="logo-img">
+  </a>
+  <nav class="nav-links">
+    <a href="index.html">Início</a>
+    <a href="simulacao.html">Simulação</a>
+    
+    <!-- Link visível para qualquer usuário logado (Operador ou Admin) -->
+    <a href="entregas.html" class="nav-logado" style="display: none;">Entregas</a>
+    
+    <!-- Links visíveis exclusivamente para Administradores -->
+    <a href="estoque.html" class="nav-admin" style="display: none;">Estoque</a>
+    <a href="veiculos.html" class="nav-admin" style="display: none;">Veículos</a>
+    <a href="admin.html" class="nav-admin" style="display: none;">Painel Admin</a>
+    
+    <a href="login.html" id="nav-btn-login" class="btn-nav-login">Entrar</a>
+    <span id="nav-usuario-nome" style="font-weight: 700; color: var(--verde-escuro); display: none;"></span>
+    <button id="nav-btn-logout" class="btn-nav-logout" style="display: none;" onclick="fazerLogout()">Sair</button>
+  </nav>
+</header>
+
+  <main class="container">
+    <div class="tab-perfil-container">
+      <a href="usuario.html" class="tab-btn active">👤 Conta Pessoal (Operador)</a>
+      <a href="empresas.html" class="tab-btn">🏢 Conta Corporativa (Operador)</a>
+    </div>
+
+    <h1 class="titulo-pagina">Cadastro de Operador — Conta pessoal</h1>
+    <p class="subtitulo-pagina">Cadastre-se para solicitar e despachar entregas na plataforma!</p>
+
+    <form id="form-pessoal">
+      <div class="form-duas-colunas">
+        <div class="coluna-inputs">
+          <div class="input-pin-group">
+            <span class="icon-pin">📍</span>
+            <input type="text" id="nome" placeholder="Nome completo *" required>
+          </div>
+
+          <div class="input-pin-group">
+            <span class="icon-pin">📍</span>
+            <input type="email" id="email" placeholder="E-mail *" required>
+          </div>
+
+          <div class="input-pin-group">
+            <span class="icon-pin">📍</span>
+            <input type="text" id="cpf" placeholder="CPF (opcional)">
+          </div>
+
+          <div class="input-pin-group">
+            <span class="icon-pin">📍</span>
+            <input type="password" id="senha" placeholder="Senha (mínimo de 8 caracteres) *" required minlength="8">
+          </div>
+
+          <div class="input-pin-group">
+            <span class="icon-pin">📍</span>
+            <input type="password" id="confirmar_senha" placeholder="Confirme sua senha *" required>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <div class="input-pin-group">
+            <span class="icon-pin">📍</span>
+            <input type="text" id="cidade" placeholder="Sua cidade">
+          </div>
+        </div>
+      </div>
+
+      <div id="alerta-pessoal" class="alerta-box"></div>
+
+      <div class="btn-submit-container">
+        <button type="submit" class="btn-arrow" title="Cadastrar">➔</button>
+      </div>
+    </form>
+  </main>
+
+  <script src="js/comum.js"></script>
+  <script src="js/usuario.js"></script>
+</body>
+</html>
