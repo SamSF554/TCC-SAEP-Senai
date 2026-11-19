@@ -56,9 +56,11 @@ async function prepararAplicacao() {
       console.log(`🔒 Conta administrativa criada: ${email}`);
     } else if (existe.perfil !== 'administrador') {
       throw new Error(`O e-mail configurado em ADMIN_EMAIL já pertence a um operador: ${email}`);
-    } else if (await bcrypt.compare('admin123', existe.senha)) {
+    } else if (!(await bcrypt.compare(process.env.ADMIN_PASSWORD, existe.senha))) {
+      // ADMIN_PASSWORD é a fonte da senha da conta administrativa.
+      // Isso permite trocar a senha pelo painel da Vercel sem expor seu valor.
       await existe.update({ senha: await bcrypt.hash(process.env.ADMIN_PASSWORD, 12) });
-      console.log('🔒 Senha administrativa antiga substituída.');
+      console.log('🔒 Senha administrativa sincronizada com ADMIN_PASSWORD.');
     }
   }
 
