@@ -8,8 +8,8 @@ O **UrbanLink Flow** é uma aplicação web de apoio à logística urbana. A pla
 
 | Item da entrega | Acesso |
 | --- | --- |
-| **Site publicado e funcional** | **https://projeto-integrador-senai-saep.vercel.app/** |
-| **Código-fonte (GitHub)** | **https://github.com/SamSF554/TesteSaep** |
+| **Site publicado e funcional** | **https://urbanlink-saep.vercel.app/** |
+| **Código-fonte (GitHub)** | **https://github.com/SamSF554/TCC-SAEP-Senai** |
 | Modelagem conceitual | [Abrir documentação](documentacao/modelagem_conceitual.md) |
 | Modelagem lógica | [Abrir documentação](documentacao/modelagem_logica.md) |
 | Diagrama Entidade-Relacionamento (DER) | [Visualizar DER](documentacao/DER.md) |
@@ -78,7 +78,7 @@ Documentos exigidos para a entrega:
 ## Estrutura do repositório
 
 ```text
-TesteSaep/
+TCC-SAEP-Senai/
 ├── README.md
 ├── .env.example                 # Modelo de ambiente, sem senhas reais
 ├── package.json
@@ -110,8 +110,8 @@ O repositório também contém o guia histórico de deploy (`GUIA_DEPLOY_VERCEL_
 Para uma instalação **local simples** (SQLite), é necessário Node.js 18+ e npm:
 
 ```bash
-git clone https://github.com/SamSF554/TesteSaep.git
-cd TesteSaep
+git clone https://github.com/SamSF554/TCC-SAEP-Senai.git
+cd TCC-SAEP-Senai
 npm ci
 ```
 
@@ -121,7 +121,7 @@ Copie `.env.example` para `.env` e **substitua** `JWT_SECRET` por um valor aleat
 npm start
 ```
 
-Depois, abra **http://localhost:3000/**. A rota **`/api/health`** permite verificar a conexão com o banco. Para uso remoto, visite o [site publicado na Vercel](https://projeto-integrador-senai-saep.vercel.app/).
+Depois, abra **http://localhost:3000/**. A rota **`/api/health`** permite verificar a conexão com o banco. Para uso remoto, visite o [site publicado na Vercel](https://urbanlink-saep.vercel.app/).
 
 Para reproduzir o PostgreSQL, executar os scripts SQL, configurar o Supabase ou entender os passos de cada perfil, consulte o **[guia completo de instalação e uso](arquivos_adicionais/INSTALACAO_E_USO.md)**.
 

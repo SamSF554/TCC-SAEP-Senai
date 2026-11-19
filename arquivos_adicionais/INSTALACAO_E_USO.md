@@ -9,13 +9,13 @@ Este guia serve à reprodução acadêmica do projeto. **A aplicação publicada
 - **Para testar localmente:** SQLite em arquivo, utilizado automaticamente pelo Sequelize, sem instalar servidor de banco.
 - **Para reproduzir o ambiente de produção:** um projeto Supabase com PostgreSQL e URL privada de conexão.
 
-Repositório: https://github.com/SamSF554/TesteSaep
+Repositório: https://github.com/SamSF554/TCC-SAEP-Senai
 
 ## 2. Obter o código e instalar dependências
 
 ```bash
-git clone https://github.com/SamSF554/TesteSaep.git
-cd TesteSaep
+git clone https://github.com/SamSF554/TCC-SAEP-Senai.git
+cd TCC-SAEP-Senai
 npm ci
 ```
 
@@ -85,7 +85,7 @@ Em Vercel, configure as variáveis no painel **Settings → Environment Variable
 
 ## 6. Como utilizar o sistema
 
-1. **Visitação:** abra a [aplicação publicada](https://projeto-integrador-senai-saep.vercel.app/) ou a instalação local.
+1. **Visitação:** abra a [aplicação publicada](https://urbanlink-saep.vercel.app/) ou a instalação local.
 2. **Cadastro:** em `usuario.html` (pessoa) ou `empresas.html` (empresa), crie uma conta que terá perfil `operador`.
 3. **Login:** em `login.html`, entre com a conta cadastrada. Um administrador utiliza o **mesmo** formulário de login com o e-mail/senha configurados no servidor.
 4. **Estoque (admin):** em `estoque.html`, cadastre produtos, veja quantidades e inclua novas remessas.
