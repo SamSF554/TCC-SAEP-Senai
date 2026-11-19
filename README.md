@@ -1,214 +1,145 @@
-> **Para publicar na Vercel com Supabase, leia primeiro [`GUIA_DEPLOY_VERCEL_SUPABASE.md`](GUIA_DEPLOY_VERCEL_SUPABASE.md).**
+# UrbanLink Flow — Sistema de Gestão Logística
 
-# 🚚 UrbanLink Flow — Mobilidade & Gestão Logística Conectada
+**Projeto Integrador SENAI | 2026**
 
-![UrbanLink Version](https://img.shields.io/badge/Revis%C3%A3o-seguran%C3%A7a%20e%20integridade-4C7026?style=for-the-badge)
-![Node.js](https://img.shields.io/badge/Node.js-18%2B-202B60?style=for-the-badge&logo=nodedotjs)
-![Express](https://img.shields.io/badge/Express-4.19-B6CF7B?style=for-the-badge&logo=express)
-![Sequelize](https://img.shields.io/badge/Sequelize-6.37-8FACCA?style=for-the-badge&logo=sequelize)
+O **UrbanLink Flow** é uma aplicação web de apoio à logística urbana. A plataforma reúne cadastro de usuários e empresas, gestão de produtos em estoque, controle de veículos, solicitações e acompanhamento de entregas e uma simulação visual de rotas. Os recursos de gestão são separados por perfil de acesso, permitindo que operadores acompanhem suas solicitações enquanto administradores gerenciam a operação.
 
-O **UrbanLink Flow** é uma plataforma web completa para gestão logística urbana, gerenciamento de frotas, controle de estoque corporativo e simulação em tempo real de trajetos e entregas.
+## Links do projeto
 
----
+| Item da entrega | Acesso |
+| --- | --- |
+| **Site publicado e funcional** | **https://projeto-integrador-senai-saep.vercel.app/** |
+| **Código-fonte (GitHub)** | **https://github.com/SamSF554/TesteSaep** |
+| Modelagem conceitual | [Abrir documentação](documentacao/modelagem_conceitual.md) |
+| Modelagem lógica | [Abrir documentação](documentacao/modelagem_logica.md) |
+| Diagrama Entidade-Relacionamento (DER) | [Visualizar DER](documentacao/DER.md) |
+| Scripts SQL e instruções de uso | [Arquivos adicionais](arquivos_adicionais/INSTALACAO_E_USO.md) |
 
-## 🌟 Destaques da Versão 9.0 (v9)
+## Objetivo do sistema
 
-A versão **v9.0** consolidou a interface e os fluxos iniciais. Esta revisão complementa o projeto com validações no servidor e correções importantes:
+Organizar tarefas comuns de uma operação de entregas em um ambiente único, apoiando:
 
-- A API agora exige JWT para consultas privadas e perfil de administrador para alterações de estoque, frota e status.
-- Entregas são vinculadas ao usuário autenticado; operadores só consultam as próprias entregas. Registros antigos sem proprietário ficam visíveis somente para administradores.
-- O abatimento do estoque e o cadastro da entrega ocorrem na mesma transação, com atualização condicional para evitar quantidades negativas.
-- O fallback de MySQL para SQLite é selecionado antes da criação dos modelos (somente em desenvolvimento).
-- O simulador exibe o contrato correto da API e deixa explícito que os valores são demonstrativos.
-- Não há mais senha administrativa fixa criada automaticamente. O seed passa a ser configurável.
+- Registro de pedidos e identificação por código de rastreio.
+- Visibilidade da quantidade disponível de produtos e seu consumo por entrega.
+- Cadastro e associação de veículos à operação.
+- Acompanhamento e atualização do andamento das entregas.
+- Separação de permissões entre **operador** e **administrador**.
 
-### 🆕 O que mudou na v9.0:
-1. **Limpeza e Otimização Estrutural:**
-   - Remoção completa de scripts, arquivos mortos e duplicados do ecossistema.
-2. **Autenticação Administrativa Restrita:**
-   - Acesso exclusivo via formulário de login padrão (`login.html`). **Não há formulários públicos para cadastro de Administrador**.
-3. **Sementeira Automática no Banco de Dados (`Seed`):**
-   - O servidor pode criar uma conta administrativa na inicialização, mediante configuração de `ADMIN_EMAIL` e `ADMIN_PASSWORD`.
-4. **Perfil `operador` Obrigatório Web:**
-   - Todos os registros iniciados pelas páginas de cadastro (`usuario.html` e `empresas.html`) recebem estritamente o perfil **`operador`**.
-5. **Status Inicial "Pendente":**
-   - O fluxo de vida de uma entrega inicia-se por padrão como **`pendente`** (substituindo a atribuição direta para `em_transito`).
-6. **Divisão Modular do Painel Administrativo:**
-   - O painel administrativo foi fragmentado em páginas dedicadas e protegidas:
-     - **`estoque.html`**: Cadastro de itens em galpão e suporte à botão **"+ Nova Remessa"** (validando obrigatoriamente entradas numéricas $> 0$).
-     - **`veiculos.html`**: Gestão e inclusão de veículos com verificação de capacidade máxima em kg.
-     - **`admin.html`**: Central de controle de entregas para alteração de status (`pendente`, `em_transito`, `entregue`) e alocação de frota.
-7. **Reintegração Visual no Início:**
-   - Restauração dos cards de perfis com ícones SVG estilizados e caixa de simulação rápida na página inicial (`index.html`).
-8. **Simulador de Rotas SVG Animado Reativado:**
-   - A página `simulacao.html` foi reintegrada utilizando o mapa interativo SVG animado, ajustado para a paleta oficial de cores do projeto.
-9. **Formatação Humanizada de Interface:**
-   - O sistema limpa formatações brutas do banco de dados (ex: transforma `em_transito` em **`EM TRÂNSITO`** sem traços ou underlines para visualização do usuário final).
+O sistema foi desenvolvido para **demonstração e fins educacionais**. A simulação visual de trajeto e os valores de distância/tempo são ilustrativos; não representam uma consulta de trânsito ou roteirização em tempo real.
 
----
+## Funcionalidades
 
-## 🛠️ Tecnologias Utilizadas
+| Módulo | Funcionalidades | Acesso |
+| --- | --- | --- |
+| Cadastro | Criar conta pessoal ou corporativa; o cadastro público recebe perfil `operador` | Público |
+| Autenticação | Login unificado, senha com hash bcrypt, sessão via JWT e controle de permissões | Operador e administrador |
+| Entregas | Solicitar entregas com destino, código de rastreio, produto e quantidade; consultar entregas do próprio usuário | Operador e administrador |
+| Estoque | Cadastrar produtos, consultar quantidades e receber novas remessas | Administrador |
+| Frota | Cadastrar e consultar veículos e suas capacidades | Administrador |
+| Painel de gestão | Associar veículo e alterar estado de entrega (`pendente`, `em_transito`, `entregue`) | Administrador |
+| Simulação | Exibir visualização SVG ilustrativa de trajeto, distância e tempo demonstrativos | Público |
 
-### Backend
-- **Node.js** com **Express.js** (Arquitetura RESTful).
-- **Sequelize ORM** (Suporte nativo a **MySQL 8** e banco em memória **SQLite3**).
-- **BCrypt** para hashing seguro de senhas.
-- **JSON Web Token (JWT)** para autenticação de sessões.
-- **Dotenv** para variáveis de ambiente.
+O registro de uma entrega pelo servidor verifica a disponibilidade do produto e desconta o estoque **na mesma transação**, evitando quantidades negativas. Os endpoints privados verificam o token JWT e as permissões do perfil.
 
-### Frontend
-- **HTML5 & CSS3** (Sistema de temas com variáveis CSS customizadas e responsividade).
-- **JavaScript Vanilla (ES6+)** com consumo assíncrono via Fetch API.
-- **SVG com animações CSS/JS** para cálculo e visualização de trajetos no mapa.
-- **Fonte Oficial:** *Panton Trial Regular*.
+## Tecnologias utilizadas
 
----
+| Camada | Tecnologias |
+| --- | --- |
+| Frontend | **HTML5, CSS3, JavaScript**, Fetch API, ilustrações/elementos **SVG** |
+| Backend | **Node.js**, **Express.js 4** e API HTTP/JSON |
+| Persistência e modelos | **PostgreSQL no Supabase**, **Sequelize 6**, driver `pg` |
+| Autenticação e segurança | **bcrypt**, **JSON Web Token (JWT)**, variáveis de ambiente com `dotenv` |
+| Hospedagem | **Vercel** (site e backend Express) |
+| Versionamento | **Git e GitHub** |
 
-## 🎨 Paleta Oficial de Cores
+O código também permite **SQLite local** para desenvolvimento e possui suporte opcional a MySQL. **O banco do site publicado é PostgreSQL no Supabase**.
 
-| Cor | Código Hex | Utilização |
-| :--- | :--- | :--- |
-| **Verde Escuro** | `#4C7026` | Botões principais, títulos e pontos finais da rota |
-| **Verde Claro** | `#B6CF7B` | Fundo de tabelas, badges e detalhes visuais |
-| **Creme** | `#F5F3DC` | Cor de fundo principal da aplicação |
-| **Azul Claro** | `#8FACCA` | Elementos de apoio e nós intermediários |
-| **Azul Escuro** | `#202B60` | Bordas, textos principais, cabeçalhos e veículo animado |
+## Modelagem do banco de dados
 
----
+O banco tem **quatro tabelas principais**:
 
-## 📂 Estrutura do Projeto
+| Tabela | Responsabilidade | Identificadores e vínculos |
+| --- | --- | --- |
+| `Usuarios` | Identificação, autenticação e perfil de acesso | `id` (PK), `email` único |
+| `Produtos` | Itens e quantidades em estoque | `id` (PK), `codigo` único |
+| `Veiculos` | Frota, capacidade e disponibilidade | `id` (PK), `placa` única |
+| `Entregas` | Pedidos, rastreio, destino, quantidade e estado | `id` (PK), `codigo_rastreio` único; `usuario_id`, `produto_id`, `veiculo_id` (FKs) |
+
+Cada entrega pode se relacionar a **um usuário**, **um produto** e **um veículo**; cada um desses registros pode participar de **várias entregas** ao longo do tempo. As chaves estrangeiras são anuláveis na estrutura atual para manter compatibilidade com dados antigos. O fluxo normal de cadastro exige produto e associa o usuário autenticado; a alocação de veículo pode ocorrer posteriormente.
+
+> **Nota de modelagem:** o atributo de entrega `peso_kg` tem um nome legado. Na implementação atual, seu valor é usado como **quantidade de unidades do produto**, não como medida física de peso. A documentação preserva o nome real da coluna e explica seu significado.
+
+Documentos exigidos para a entrega:
+
+1. [**Modelagem conceitual** — entidades e regras de relacionamento](documentacao/modelagem_conceitual.md).
+2. [**Modelagem lógica** — esquema, tipos de dados, PK, FK, regras e dicionário](documentacao/modelagem_logica.md).
+3. [**Diagrama Entidade-Relacionamento (DER)** — diagrama renderizado em Mermaid](documentacao/DER.md).
+
+## Estrutura do repositório
 
 ```text
-urbanlink-flow/
-├── package.json
+TesteSaep/
 ├── README.md
-├── .env
-├── .gitignore
+├── .env.example                 # Modelo de ambiente, sem senhas reais
+├── package.json
+├── package-lock.json
+├── public/                      # HTML, CSS, JavaScript e SVG do site
 ├── src/
-│   ├── app.js                          # Servidor express + inicializador do banco e seeders
-│   ├── config/
-│   │   └── database.js                 # Configuração de conexão (MySQL / SQLite fallback)
-│   ├── models/
-│   │   ├── Usuario.js                  # Modelo de usuários (perfil: operador | administrador)
-│   │   ├── Veiculo.js                  # Modelo de frotas e capacidade em kg
-│   │   ├── Produto.js                  # Modelo de itens do estoque
-│   │   └── Entrega.js                  # Modelo de entregas (status padrão: pendente)
-│   ├── controllers/
-│   │   ├── authController.js           # Lógica de login e geração do token JWT
-│   │   ├── usuarioController.js        # Cadastro de contas públicas (sempre operador)
-│   │   ├── veiculoController.js        # CRUD de veículos da frota
-│   │   ├── produtoController.js        # Controle de estoque e botão "+ Nova Remessa" (>0)
-│   │   ├── entregaController.js        # Abatimento de estoque e alocação de entregas
-│   │   └── simulacaoController.js      # Endpoint de simulação de frete/trajeto
-│   └── routes/
-│       ├── authRoutes.js
-│       ├── usuarioRoutes.js
-│       ├── veiculoRoutes.js
-│       ├── produtoRoutes.js
-│       ├── entregaRoutes.js
-│       └── simulacaoRoutes.js
-└── public/
-    ├── index.html                      # Página inicial com opções de perfil e atalhos
-    ├── login.html                      # Tela unificada de login (Operadores e Admins)
-    ├── usuario.html                    # Cadastro de conta pessoal (Operador)
-    ├── empresas.html                   # Cadastro de conta corporativa (Operador)
-    ├── entregas.html                   # Solicitação/Consulta de entregas
-    ├── estoque.html                    # Área restrita: Gestão de estoque (Admin)
-    ├── veiculos.html                   # Área restrita: Gestão de frotas (Admin)
-    ├── admin.html                      # Área restrita: Painel Geral de Entregas (Admin)
-    ├── simulacao.html                  # Visualizador de rota e mapa SVG animado
-    ├── css/
-    │   └── estilo.css                  # Folha de estilos unificada
-    ├── js/
-    │   ├── comum.js                    # Validador de sessão e controle global da Navbar
-    │   ├── login.js
-    │   ├── usuario.js
-    │   ├── empresas.js
-    │   ├── entregas.js
-    │   ├── estoque.js
-    │   ├── veiculos.js
-    │   └── simulacao.js
-    ├── img/                            # Logotipos SVG oficiais
-    └── font/                           # Arquivo de fonte oficial
+│   ├── app.js                   # Inicialização Express, rotas e banco
+│   ├── config/                  # Conexão PostgreSQL, SQLite ou MySQL
+│   ├── models/                  # Usuario, Produto, Veiculo, Entrega
+│   ├── controllers/             # Regras de negócio
+│   ├── middlewares/             # Autenticação e autorização
+│   ├── routes/                  # Endpoints HTTP
+│   └── utils/                   # Validações compartilhadas
+├── documentacao/
+│   ├── modelagem_conceitual.md
+│   ├── modelagem_logica.md
+│   └── DER.md
+└── arquivos_adicionais/
+    ├── 00_criar_banco_local.sql
+    ├── 01_criar_tabelas.sql
+    ├── 02_inserir_dados.sql
+    └── INSTALACAO_E_USO.md
 ```
 
----
+O repositório também contém o guia histórico de deploy (`GUIA_DEPLOY_VERCEL_SUPABASE.md`) e o relatório de melhorias anteriores (`RELATORIO_MELHORIAS.md`).
 
-## 👥 Permissões e Perfis de Acesso
+## Instalação e execução
 
-O sistema gerencia dois níveis de perfil:
+Para uma instalação **local simples** (SQLite), é necessário Node.js 18+ e npm:
 
-1. **`operador`** (Criado via site em `usuario.html` ou `empresas.html`):
-   - Acesso à visualização do início e da simulação.
-   - Permissão para cadastrar e consultar suas próprias solicitações de entrega (`entregas.html`), com verificação no backend.
-   - Abatimento automático no estoque ao realizar um pedido.
-   - **Restrições:** Não visualiza nem acessa as páginas de Estoque, Veículos e Painel Admin.
+```bash
+git clone https://github.com/SamSF554/TesteSaep.git
+cd TesteSaep
+npm ci
+```
 
-2. **`administrador`** (Cadastrado diretamente no banco de dados):
-   - Acesso irrestrito a todas as páginas da plataforma.
-   - Gestão de itens em estoque e funcionalidade de **+ Nova Remessa** (`estoque.html`).
-   - Gestão e inclusão de novos veículos na frota (`veiculos.html`).
-   - Alteração dos status das entregas (`Pendente` ➔ `Em Trânsito` ➔ `Entregue`) e alocação de veículos (`admin.html`).
+Copie `.env.example` para `.env` e **substitua** `JWT_SECRET` por um valor aleatório com pelo menos 32 caracteres e `ADMIN_PASSWORD` por uma senha forte com pelo menos 12 caracteres. Para SQLite, mantenha `USE_SQLITE=true` e deixe `DATABASE_URL` ausente.
 
----
+```bash
+npm start
+```
 
-## 🔑 Configuração da Conta Administrativa
+Depois, abra **http://localhost:3000/**. A rota **`/api/health`** permite verificar a conexão com o banco. Para uso remoto, visite o [site publicado na Vercel](https://projeto-integrador-senai-saep.vercel.app/).
 
-Para criar a primeira conta administrativa, defina `ADMIN_EMAIL` e `ADMIN_PASSWORD` (pelo menos 12 caracteres) no arquivo `.env` antes de iniciar a aplicação. **Não há mais credenciais padrão embutidas no código.** Se um banco antigo contém o administrador com senha `admin123`, altere essa senha imediatamente antes de expor o sistema à rede.
+Para reproduzir o PostgreSQL, executar os scripts SQL, configurar o Supabase ou entender os passos de cada perfil, consulte o **[guia completo de instalação e uso](arquivos_adicionais/INSTALACAO_E_USO.md)**.
 
----
+## Scripts SQL para a entrega
 
-## 🚀 Como Executar o Projeto
+1. [`00_criar_banco_local.sql`](arquivos_adicionais/00_criar_banco_local.sql): cria um banco PostgreSQL **local/autogerenciado**, não executável no Supabase SQL Editor.
+2. [`01_criar_tabelas.sql`](arquivos_adicionais/01_criar_tabelas.sql): cria as tabelas, o enum de status, as FKs, as restrições, os índices e habilita RLS num banco PostgreSQL **novo**.
+3. [`02_inserir_dados.sql`](arquivos_adicionais/02_inserir_dados.sql): insere **produtos e veículos fictícios** de demonstração, sem usuários, senhas ou dados pessoais.
 
-### Pré-requisitos
-- Node.js instalado (versão 18 ou superior).
-- MySQL em execução (opcional, pois o sistema possui fallback automático para SQLite local).
+**Atenção:** esses arquivos documentam a reprodução acadêmica do banco. **Não execute scripts de criação ou de inserção no banco de produção já em funcionamento.** Para criar usuários e entregas reais, utilize a própria aplicação, que aplica hashes e regras de estoque.
 
-### Passo a Passo
+## Perfis e segurança
 
-1. **Clonar/Extrair o projeto e instalar as dependências:**
-   ```bash
-   cd urbanlink-flow
-   npm install
-   ```
-
-2. **Configurar o Arquivo de Ambiente (`.env`):**
-   Copie `.env.example` para `.env` e configure uma chave `JWT_SECRET` aleatória, de pelo menos 32 caracteres. Para o primeiro acesso administrativo, preencha `ADMIN_EMAIL` e `ADMIN_PASSWORD` com uma senha forte. Para utilizar SQLite local, mantenha `USE_SQLITE=true`.
-
-3. **Iniciar o Servidor:**
-   ```bash
-   npm start
-   ```
-   *Ou para modo de desenvolvimento com Nodemon:*
-   ```bash
-   npm run dev
-   ```
-
-4. **Acessar no Navegador:**
-   Acesse a aplicação em `http://localhost:3000`.
+- **Operador:** conta criada pelos formulários públicos; solicita e consulta suas entregas.
+- **Administrador:** conta configurada no servidor por `ADMIN_EMAIL` e `ADMIN_PASSWORD` (não existe senha administrativa padrão no código); gerencia estoque, frota e entregas.
+- Os segredos, a URL privada do banco e a senha administrativa devem ficar nas **variáveis de ambiente** do servidor, nunca no frontend, no `.env.example` ou no repositório.
+- O Supabase armazena os dados; **a autenticação desta aplicação é implementada no backend Express com bcrypt e JWT**, e não pela interface Supabase Auth.
 
 ---
 
-## ⚡ Fluxo Principal de Teste Recomendado
-
-1. Acesse `http://localhost:3000/login.html` e entre com a conta de administrador configurada no `.env`.
-2. Acesse a página **Estoque** e adicione novos itens ou utilize o botão **"+ Nova Remessa"** adicionando quantidade.
-3. Acesse a página **Veículos** e cadastre um veículo (ex: `Mini Caminhão` / Placa `ABC-1234`).
-4. Acesse a página **Entregas**, crie um pedido de entrega. Observe que o status inicial será **PENDENTE** e a quantidade será deduzida do estoque.
-5. Acesse o **Painel Admin**, selecione a entrega criada, aloque o veículo cadastrado e altere o status para **EM TRÂNSITO** ou **ENTREGUE**.
-6. Acesse a **Simulação** para visualizar a animação ilustrativa. As estimativas são estáticas, não rotas ou trânsito em tempo real.
-
-### Observações de compatibilidade
-
-- Os arquivos `package.json` e de lock não fazem parte deste ZIP reduzido; mantenha os arquivos de dependências do seu projeto original.
-- A tabela `Entregas` recebe a nova coluna opcional `usuario_id` automaticamente; faça backup do banco antes de executar a nova versão em dados existentes.
-- Para produção, configure MySQL corretamente. Se ele ficar indisponível, o serviço **não** alterna silenciosamente para um banco vazio. O fallback automático para SQLite é restrito a desenvolvimento.
-- A aplicação preservou `peso_kg` por compatibilidade, embora o formulário atual o utilize como quantidade de unidades. Para controle de peso real, será preciso modelar o peso por produto separadamente.
-- A proteção de recursos acontece nos endpoints da API. Como os HTMLs são estáticos, acessar o arquivo de uma página administrativa não concede acesso aos dados e às operações privadas.
-
----
-
-## 📄 Licença
-
-Este projeto é disponibilizado para fins educacionais e de gestão de logística conectada.
-UrbanLink Flow © 2026. Todos os direitos reservados.
+**Projeto Integrador SENAI — UrbanLink Flow (2026).** Repositório e aplicação disponibilizados para avaliação acadêmica.
